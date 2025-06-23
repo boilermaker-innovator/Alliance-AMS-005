@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to iTabs Converter - Alliance AMS Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f7fa;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+    }
+    
+    .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .demo-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin: 30px 0;
+        overflow: hidden;
+    }
+    
+    .section-header {
+        background: #f8f9fa;
+        padding: 20px 30px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    
+    .section-subtitle {
+        color: #666;
+        font-size: 1rem;
+    }
+    
+    .conversion-flow {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 20px;
+        padding: 30px;
+        align-items: center;
+    }
+    
+    .csv-input {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px dashed #6c757d;
+    }
+    
+    .csv-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #495057;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .csv-controls {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .csv-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .csv-btn:hover {
+        background: #5a6268;
+    }
+    
+    .csv-data {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        overflow-x: auto;
+        max-height: 300px;
+        overflow-y: auto;
+        min-height: 150px;
+        white-space: pre;
+        word-wrap: break-word;
+        resize: vertical;
+    }
+    
+    .csv-data[contenteditable="true"] {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    }
+    
+    .editable-hint {
+        font-size: 0.7rem;
+        color: #666;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    .conversion-arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .arrow {
+        font-size: 2rem;
+        color: #28a745;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .convert-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .convert-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+    
+    .itabs-output {
+        background: #e8f5e9;
+        border-radius: 8px;
+        padding: 20px;
+        border: 2px solid #28a745;
+    }
+    
+    .output-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #155724;
+    }
+    
+    .product-preview {
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #c3e6cb;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    
+    .product-preview:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .product-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .product-details {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .itabs-indicator {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        background: #1e3c72;
+        color: white;
+        border-radius: 50%;
+        font-size: 11px;
+        font-style: italic;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .itabs-indicator:hover {
+        transform: scale(1.2);
+        background: #2a5298;
+    }
+    
+    .steps-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 25px;
+    }
+    
+    .step-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #1e3c72;
+        position: relative;
+    }
+    
+    .step-number {
+        background: #1e3c72;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .step-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    
+    .step-description {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .demo-controls {
+        text-align: center;
+        padding: 30px;
+        background: #f8f9fa;
+    }
+    
+    .demo-btn {
+        background: #1e3c72;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .demo-btn:hover {
+        background: #2a5298;
+        transform: translateY(-2px);
+    }
+    
+    .demo-btn.secondary {
+        background: #6c757d;
+    }
+    
+    .demo-btn.secondary:hover {
+        background: #5a6268;
+    }
+    
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .popup-overlay.active {
+        display: flex;
+    }
+    
+    .popup {
+        background: white;
+        width: 500px;
+        max-width: 90vw;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #1e3c72;
+        animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    .popup-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .popup-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .popup-code {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-top: 5px;
+    }
+    
+    .popup-close {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    
+    .popup-tabs {
+        display: flex;
+        background: #f8f9fa;
+    }
+    
+    .popup-tab {
+        flex: 1;
+        padding: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #666;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .popup-tab.active {
+        color: #1e3c72;
+        background: white;
+        border-bottom-color: #1e3c72;
+    }
+    
+    .popup-content {
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .popup-tab-content {
+        display: none;
+    }
+    
+    .popup-tab-content.active {
+        display: block;
+    }
+    
+    .scale-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 12px;
+        margin: 30px 0;
+    }
+    
+    .scale-info h3 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .scale-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .scale-stat {
+        text-align: center;
+    }
+    
+    .scale-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #ffd700;
+    }
+    
+    .scale-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    @media (max-width: 768px) {
+        .conversion-flow {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .conversion-arrow .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .steps-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .scale-stats {
+            gap: 20px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="header">
+        <h1>CSV to iTabs Converter</h1>
+        <p>Transform your product data into interactive customer experiences</p>
+    </div>
+
+```
+<div class="container">
+    <div class="demo-section">
+        <div class="section-header">
+            <h2 class="section-title">Live Conversion Demo</h2>
+            <p class="section-subtitle">Watch how your raw CSV product data becomes interactive iTabs SmartLinks</p>
+        </div>
+        
+        <div class="conversion-flow">
+            <div class="csv-input">
+                <div class="csv-title">
+                    📄 Your CSV Product Data
+                    <div class="csv-controls">
+                        <button class="csv-btn" onclick="toggleEditing(this)">Edit</button>
+                        <button class="csv-btn" onclick="clearCSV()">Clear</button>
+                        <button class="csv-btn" onclick="loadSample('tools')">Sample Tools</button>
+                        <button class="csv-btn" onclick="loadSample('automotive')">Sample Auto</button>
+                    </div>
+                </div>
+                <div class="csv-data" id="csvData" contenteditable="false">product_code,product_name,price,material,size,stock_status
+```
+
+F-6MM,Forstner Bit 6mm,18.95,High Speed Steel,6mm,In Stock
+F-10MM,Forstner Bit 10mm,22.95,High Speed Steel,10mm,In Stock
+F-15MM,Forstner Bit 15mm,28.95,High Speed Steel,15mm,In Stock
+F-20MM,Forstner Bit 20mm,34.95,High Speed Steel,20mm,In Stock
+F-25MM,Forstner Bit 25mm,42.95,High Speed Steel,25mm,In Stock
+RDA-7945,Brake Rotor Front,245.00,Cast Iron,280mm,In Stock
+NWP-B4C,Brake Pads Ceramic,89.95,Ceramic,Front Set,In Stock
+NAPA-F45,Oil Filter Spin-On,24.95,Paper Element,M20x1.5,In Stock</div>
+<div class="editable-hint">Click “Edit” to paste your own CSV data, or use sample buttons</div>
+</div>
+
+```
+            <div class="conversion-arrow">
+                <div class="arrow">→</div>
+                <button class="convert-btn" onclick="startConversion()">Convert to iTabs</button>
+                <div style="font-size: 0.8rem; color: #666; text-align: center;">AI Enhanced<br>Processing</div>
+            </div>
+            
+            <div class="itabs-output">
+                <div class="output-title">🎯 Interactive iTabs Products</div>
+                <div id="outputArea">
+                    <div style="text-align: center; color: #666; padding: 20px;">
+                        Click "Convert to iTabs" to see the transformation
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="steps-section">
+        <h2 class="section-title">How the Conversion Process Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-title">CSV Data Upload</div>
+                <div class="step-description">Upload your existing product CSV files with basic information like product codes, names, prices, and specifications.</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-title">AI Enhancement</div>
+                <div class="step-description">Our AI system analyzes your data and enhances it with customer-friendly descriptions, organized specifications, and application information.</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-title">iTabs Generation</div>
+                <div class="step-description">Each product gets organized into tabs (Overview, Specs, Applications, Pricing) with interactive "i" indicators.</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-title">Website Integration</div>
+                <div class="step-description">The enhanced products are automatically integrated into your existing website with working iTabs functionality.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scale-info">
+        <h3>Scale to Your Full Catalog</h3>
+        <p>This same process works for all your product categories</p>
+        <div class="scale-stats">
+            <div class="scale-stat">
+                <div class="scale-number">50K+</div>
+                <div class="scale-label">Products Ready</div>
+            </div>
+            <div class="scale-stat">
+                <div class="scale-number">1 Day</div>
+                <div class="scale-label">Processing Time</div>
+            </div>
+            <div class="scale-stat">
+                <div class="scale-number">Zero</div>
+                <div class="scale-label">Manual Entry</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="demo-controls">
+        <button class="demo-btn" onclick="startConversion()">🚀 Run Full Demo</button>
+        <button class="demo-btn secondary" onclick="showDifferentCategory()">Try Different Category</button>
+    </div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup()">
+    <div class="popup" onclick="event.stopPropagation()">
+        <div class="popup-header">
+            <div class="popup-title" id="popupTitle">Product Information</div>
+            <div class="popup-code" id="popupCode">Product Code</div>
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+        </div>
+        <div class="popup-tabs">
+            <button class="popup-tab active" onclick="switchPopupTab(this, 'overview')">Overview</button>
+            <button class="popup-tab" onclick="switchPopupTab(this, 'specs')">Specs</button>
+            <button class="popup-tab" onclick="switchPopupTab(this, 'pricing')">Pricing</button>
+        </div>
+        <div class="popup-content">
+            <div class="popup-tab-content active" id="overview">
+                <div id="overviewContent"></div>
+            </div>
+            <div class="popup-tab-content" id="specs">
+                <div id="specsContent"></div>
+            </div>
+            <div class="popup-tab-content" id="pricing">
+                <div id="pricingContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sampleCSVData = {
+        tools: `product_code,product_name,price,material,size,stock_status
+```
+
+F-6MM,Forstner Bit 6mm,18.95,High Speed Steel,6mm,In Stock
+F-10MM,Forstner Bit 10mm,22.95,High Speed Steel,10mm,In Stock
+F-15MM,Forstner Bit 15mm,28.95,High Speed Steel,15mm,In Stock
+F-20MM,Forstner Bit 20mm,34.95,High Speed Steel,20mm,In Stock
+F-25MM,Forstner Bit 25mm,42.95,High Speed Steel,25mm,In Stock
+D-12MM,Drill Bit HSS 12mm,8.95,High Speed Steel,12mm,In Stock
+D-15MM,Drill Bit HSS 15mm,12.95,High Speed Steel,15mm,In Stock
+S-150MM,Steel Rule 150mm,15.50,Stainless Steel,150mm,In Stock`,
+
+```
+        automotive: `product_code,product_name,price,material,size,stock_status
+```
+
+RDA-7945,Brake Rotor Front Set,245.00,Cast Iron,280mm,In Stock
+NWP-B4C,Ceramic Brake Pads,89.95,Ceramic,Front Set,In Stock
+NAPA-F45,Oil Filter Spin-On,24.95,Paper Element,M20x1.5,In Stock
+GATES-5PK1190,Serpentine Belt,42.50,EPDM Rubber,1190mm,In Stock
+WIX-51515,Air Filter,18.95,Paper Element,Round,In Stock
+ACDelco-41-962,Spark Plug,12.95,Iridium,14mm,In Stock
+MANN-W712/75,Oil Filter,28.50,Paper Element,3/4-16 UNF,In Stock`
+};
+
+```
+    let productDatabase = [];
+    
+    function toggleEditing(button) {
+        const csvData = document.getElementById('csvData');
+        
+        if (csvData.contentEditable === 'false') {
+            csvData.contentEditable = 'true';
+            csvData.focus();
+            csvData.style.borderColor = '#007bff';
+            csvData.style.boxShadow = '0 0 0 2px rgba(0,123,255,0.25)';
+            button.textContent = 'Save';
+        } else {
+            csvData.contentEditable = 'false';
+            csvData.style.borderColor = '#dee2e6';
+            csvData.style.boxShadow = 'none';
+            button.textContent = 'Edit';
+        }
+    }
+    
+    function clearCSV() {
+        document.getElementById('csvData').textContent = 'product_code,product_name,price,material,size,stock_status\n';
+        document.getElementById('outputArea').innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Click "Convert to iTabs" to see the transformation</div>';
+    }
+    
+    function loadSample(type) {
+        document.getElementById('csvData').textContent = sampleCSVData[type];
+        document.getElementById('outputArea').innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Click "Convert to iTabs" to see the transformation</div>';
+    }
+    
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split('\n');
+        if (lines.length < 2) return [];
+        
+        const headers = lines[0].split(',').map(h => h.trim());
+        const products = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(',').map(v => v.trim());
+            if (values.length >= headers.length) {
+                const product = {};
+                headers.forEach((header, index) => {
+                    product[header] = values[index] || '';
+                });
+                products.push(product);
+            }
+        }
+        
+        return products;
+    }
+    
+    function startConversion() {
+        const outputArea = document.getElementById('outputArea');
+        const csvText = document.getElementById('csvData').textContent;
+        
+        outputArea.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">🔄 Converting CSV data to iTabs...</div>';
+        
+        setTimeout(() => {
+            const products = parseCSV(csvText);
+            productDatabase = products;
+            
+            if (products.length === 0) {
+                outputArea.innerHTML = '<div style="text-align: center; color: #dc3545; padding: 20px;">❌ No valid product data found. Please check your CSV format.</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            products.forEach((product, index) => {
+                const name = product.product_name || product.name || `Product ${index + 1}`;
+                const code = product.product_code || product.code || `P${index + 1}`;
+                const price = product.price || '0.00';
+                const material = product.material || 'Not specified';
+                const size = product.size || 'Standard';
+                const stock = product.stock_status || product.status || 'Unknown';
+                
+                html += `
+                    <div class="product-preview">
+                        <div class="product-name">
+                            ${name}
+                            <span class="itabs-indicator" onclick="event.stopPropagation(); showProductPopup('${code}')">i</span>
+                        </div>
+                        <div class="product-details">
+                            $${price} • ${material} • ${size} • ${stock}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            outputArea.innerHTML = html;
+            
+            const instruction = document.createElement('div');
+            instruction.style.cssText = 'text-align: center; color: #28a745; font-weight: bold; padding: 15px; background: #d4edda; border-radius: 6px; margin-top: 15px;';
+            instruction.innerHTML = '👆 Click any blue "i" button to see the interactive iTabs in action!';
+            outputArea.appendChild(instruction);
+        }, 2000);
+    }
+    
+    function showDifferentCategory() {
+        const csvData = document.getElementById('csvData');
+        const currentText = csvData.textContent;
+        
+        if (currentText.includes('Forstner') || currentText.includes('Drill')) {
+            loadSample('automotive');
+        } else {
+            loadSample('tools');
+        }
+    }
+    
+    function showProductPopup(productCode) {
+        const product = productDatabase.find(p => (p.product_code || p.code) === productCode);
+        
+        if (!product) return;
+        
+        const name = product.product_name || product.name || 'Product';
+        const code = product.product_code || product.code || productCode;
+        const price = product.price || '0.00';
+        const material = product.material || 'Not specified';
+        const size = product.size || 'Standard';
+        const stock = product.stock_status || product.status || 'Unknown';
+        
+        document.getElementById('popupTitle').textContent = name;
+        document.getElementById('popupCode').textContent = `Code: ${code}`;
+        
+        document.getElementById('overviewContent').innerHTML = `
+            <h4>${name}</h4>
+            <p>Professional quality ${name.toLowerCase()} suitable for trade and industrial applications.</p>
+            <div style="background: #e8f4fd; padding: 15px; border-radius: 6px; margin: 15px 0;">
+                <strong>Key Features:</strong><br>
+                • High-quality ${material.toLowerCase()}<br>
+                • Professional grade construction<br>
+                • Suitable for heavy-duty applications<br>
+                • Alliance AMS quality guarantee
+            </div>
+        `;
+        
+        document.getElementById('specsContent').innerHTML = `
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px; font-weight: 600;">Product Code</td><td style="padding: 8px;">${code}</td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px; font-weight: 600;">Material</td><td style="padding: 8px;">${material}</td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px; font-weight: 600;">Size</td><td style="padding: 8px;">${size}</td></tr>
+                <tr style="border-bottom: 1px solid #eee;"><td style="padding: 8px; font-weight: 600;">Brand</td><td style="padding: 8px;">Alliance Tools</td></tr>
+                <tr><td style="padding: 8px; font-weight: 600;">Warranty</td><td style="padding: 8px;">12 months</td></tr>
+            </table>
+        `;
+        
+        document.getElementById('pricingContent').innerHTML = `
+            <div style="background: #d4edda; padding: 20px; border-radius: 6px; text-align: center; margin: 15px 0;">
+                <div style="font-size: 1.8rem; font-weight: bold; color: #155724;">$${price}</div>
+                <div style="color: #155724;">Alliance AMS Price</div>
+            </div>
+            <div style="margin: 15px 0;">
+                <strong>Stock Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ ${stock}</span>
+            </div>
+            <div style="margin: 15px 0;">
+                <strong>Delivery:</strong><br>
+                • Perth Metro: Same day<br>
+                                  • WA Regional: Next day<br>
+                    • Interstate: 2-3 days
+                </div>
+            `;
+            
+            document.getElementById('popupOverlay').classList.add('active');
+        }
+        
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('active');
+        }
+        
+        function switchPopupTab(tabButton, tabName) {
+            document.querySelectorAll('.popup-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.popup-tab-content').forEach(content => content.classList.remove('active'));
+            
+            tabButton.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Auto-start demo after page loads
+        setTimeout(() => {
+            startConversion();
+        }, 1000);
+    </script>
+</body>
+</html>
+  
