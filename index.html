@@ -802,31 +802,31 @@ MANN-W712/75,Oil Filter,28.50,Paper Element,3/4-16 UNF,In Stock`
             <div style="margin: 15px 0;">
                 <strong>Delivery:</strong><br>
                 • Perth Metro: Same day<br>
-                                  • WA Regional: Next day<br>
-                    • Interstate: 2-3 days
-                </div>
-            `;
-            
-            document.getElementById('popupOverlay').classList.add('active');
-        }
+                • WA Regional: Next day<br>
+                • Interstate: 2-3 days
+            </div>
+        `;
         
-        function closePopup() {
-            document.getElementById('popupOverlay').classList.remove('active');
-        }
+        document.getElementById('popupOverlay').classList.add('active');
+    }
+    
+    function closePopup() {
+        document.getElementById('popupOverlay').classList.remove('active');
+    }
+    
+    function switchPopupTab(tabButton, tabName) {
+        document.querySelectorAll('.popup-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.popup-tab-content').forEach(content => content.classList.remove('active'));
         
-        function switchPopupTab(tabButton, tabName) {
-            document.querySelectorAll('.popup-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.popup-tab-content').forEach(content => content.classList.remove('active'));
-            
-            tabButton.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-        }
-        
-        // Auto-start demo after page loads
-        setTimeout(() => {
-            startConversion();
-        }, 1000);
-    </script>
+        tabButton.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+    }
+    
+    // Auto-start demo after page loads
+    setTimeout(() => {
+        startConversion();
+    }, 1000);
+</script>
+
 </body>
 </html>
-  
