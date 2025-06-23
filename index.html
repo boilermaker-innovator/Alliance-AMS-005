@@ -12,7 +12,6 @@
             box-sizing: border-box;
         }
 
-```
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
         line-height: 1.6;
@@ -478,7 +477,6 @@
         }
     }
 </style>
-```
 
 </head>
 <body>
@@ -487,7 +485,8 @@
         <p>Transform your product data into interactive customer experiences</p>
     </div>
 
-```
+
+    
 <div class="container">
     <div class="demo-section">
         <div class="section-header">
@@ -507,7 +506,6 @@
                     </div>
                 </div>
                 <div class="csv-data" id="csvData" contenteditable="false">product_code,product_name,price,material,size,stock_status
-```
 
 F-6MM,Forstner Bit 6mm,18.95,High Speed Steel,6mm,In Stock
 F-10MM,Forstner Bit 10mm,22.95,High Speed Steel,10mm,In Stock
@@ -520,7 +518,6 @@ NAPA-F45,Oil Filter Spin-On,24.95,Paper Element,M20x1.5,In Stock</div>
 <div class="editable-hint">Click “Edit” to paste your own CSV data, or use sample buttons</div>
 </div>
 
-```
             <div class="conversion-arrow">
                 <div class="arrow">→</div>
                 <button class="convert-btn" onclick="startConversion()">Convert to iTabs</button>
@@ -621,7 +618,6 @@ NAPA-F45,Oil Filter Spin-On,24.95,Paper Element,M20x1.5,In Stock</div>
 <script>
     const sampleCSVData = {
         tools: `product_code,product_name,price,material,size,stock_status
-```
 
 F-6MM,Forstner Bit 6mm,18.95,High Speed Steel,6mm,In Stock
 F-10MM,Forstner Bit 10mm,22.95,High Speed Steel,10mm,In Stock
@@ -632,9 +628,7 @@ D-12MM,Drill Bit HSS 12mm,8.95,High Speed Steel,12mm,In Stock
 D-15MM,Drill Bit HSS 15mm,12.95,High Speed Steel,15mm,In Stock
 S-150MM,Steel Rule 150mm,15.50,Stainless Steel,150mm,In Stock`,
 
-```
         automotive: `product_code,product_name,price,material,size,stock_status
-```
 
 RDA-7945,Brake Rotor Front Set,245.00,Cast Iron,280mm,In Stock
 NWP-B4C,Ceramic Brake Pads,89.95,Ceramic,Front Set,In Stock
@@ -645,7 +639,6 @@ ACDelco-41-962,Spark Plug,12.95,Iridium,14mm,In Stock
 MANN-W712/75,Oil Filter,28.50,Paper Element,3/4-16 UNF,In Stock`
 };
 
-```
     let productDatabase = [];
     
     function toggleEditing(button) {
