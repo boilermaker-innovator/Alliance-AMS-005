@@ -476,6 +476,134 @@
             gap: 20px;
         }
     }
+       /* POPUP OVERLAY AND WINDOW STYLES */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-overlay.active {
+    display: flex;
+}
+
+.popup {
+    background: white;
+    width: 90vw;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.4s ease;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+}
+
+.popup-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 20px;
+    position: relative;
+}
+
+.popup-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.popup-code {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 5px;
+    font-family: 'Courier New', monospace;
+}
+
+.popup-close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.popup-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.popup-tabs {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.popup-tab {
+    flex: 1;
+    padding: 15px 10px;
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.popup-tab:hover {
+    color: #2a5298;
+    background: rgba(42, 82, 152, 0.05);
+}
+
+.popup-tab.active {
+    color: #2a5298;
+    background: white;
+    border-bottom-color: #2a5298;
+}
+
+.popup-content {
+    padding: 25px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.popup-tab-content {
+    display: none;
+}
+
+.popup-tab-content.active {
+    display: block;
+} 
 </style>
 
 </head>
